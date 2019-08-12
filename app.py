@@ -24,5 +24,6 @@ def meeting():
 def todo():
     return {
         'todo_1': '파일로 저장하기',
+        'todo_1_1': 'elasticache 쓰려고 했는데 VPC설정이니 너무 귀찮아서 일단 S3...',
         'todo_2': '필요한 method 정의하기',        
     }
