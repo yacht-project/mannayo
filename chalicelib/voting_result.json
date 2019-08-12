@@ -1,0 +1,32 @@
+{
+  "2": {
+    "2019-08-12": {
+      "user_a": true,
+      "user_b": false,
+      "user_c": true
+    },
+    "2019-08-13": {
+      "user_k": true,
+      "user_a": true,
+      "user_g": true
+    }
+  },
+  "3": {
+    "2019-08-15": {
+      "user_a": true,
+      "user_b": false,
+      "user_c": true
+    },
+    "2019-08-16": {
+      "user_k": true,
+      "user_a": true,
+      "user_g": true
+    },
+    "2019-08-17": {
+      "user_k": false,
+      "user_a": true,
+      "user_g": true
+    }
+  }
+}
+

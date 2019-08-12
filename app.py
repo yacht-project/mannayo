@@ -1,10 +1,24 @@
+import os
+import json
+
 from chalice import Chalice
 
 app = Chalice(app_name='mannayo')
 
 
+filename = os.path.join(
+    os.path.dirname(__file__), 'chalicelib', 'voting_result.json')
+with open(filename) as f:
+    voting_result = json.load(f)
+
 @app.route('/vote/{meeting_id}', methods=['PATCH'])
 def vote(meeting_id):
+    try:
+        voting_data = voting_result[meeting_id]
+    except KeyError:
+        return {'message': 'id는 어디'}
+    print(f'test: {voting_data}')
+
     json = app.current_request.json_body
     username = json['username']
     attend = '참석' if json['attend'] else '못감'
