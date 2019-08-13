@@ -4,6 +4,7 @@ chalice==1.10.0
 click==6.7
 docutils==0.14
 enum-compat==0.0.2
+Jinja2==2.10.1
 jmespath==0.9.4
 python-dateutil==2.8.0
 six==1.12.0

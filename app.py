@@ -1,7 +1,9 @@
 import os
 import json
 
-from chalice import Chalice
+from chalice import Chalice, Response
+import jinja2
+
 
 app = Chalice(app_name='mannayo')
 
@@ -10,6 +12,24 @@ filename = os.path.join(
     os.path.dirname(__file__), 'chalicelib', 'voting_result.json')
 with open(filename) as f:
     voting_result = json.load(f)
+
+
+def render(tpl_path, context):
+    path, filename = os.path.split(tpl_path)
+    return jinja2.Environment(loader=jinja2.FileSystemLoader(path or './')).get_template(filename).render(context)
+
+
+@app.route('/')
+def index():
+    context = {
+        'context': {
+            'title': '요트',
+            'content': '사',
+        }
+    }
+    template = render('chalicelib/templates/index.html', context)
+    return Response(template, status_code=200, headers={'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*'})
+
 
 @app.route('/vote/{meeting_id}', methods=['PATCH'])
 def vote(meeting_id):
@@ -34,10 +54,10 @@ def meeting():
     return {'message': 'Meeting(id: {}) 이 생성되었습니다'.format(1)}
 
 
-@app.route('/')
-def todo():
-    return {
-        'todo_1': '파일로 저장하기',
-        'todo_1_1': 'elasticache 쓰려고 했는데 VPC설정이니 너무 귀찮아서 일단 S3...',
-        'todo_2': '필요한 method 정의하기',        
-    }
+# @app.route('/')
+# def todo():
+#     return {
+#         'todo_1': '파일로 저장하기',
+#         'todo_1_1': 'elasticache 쓰려고 했는데 VPC설정이니 너무 귀찮아서 일단 S3...',
+#         'todo_2': '필요한 method 정의하기',        
+#     }
