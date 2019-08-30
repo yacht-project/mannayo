@@ -23,15 +23,6 @@ def vote(meeting_id):
     return {'message': f'{username}: {attend}'}
 
 
-@app.route('/meeting', methods=['POST'])
-def meeting():
-    json = app.current_request.json_body
-    candidate_dates = json['candidate_dates']
-    # TODO: Create meeting on cadate_dates
-    print(candidate_dates)
-    return {'message': 'Meeting(id: {}) 이 생성되었습니다'.format(1)}
-
-
 @app.route('/')
 def todo():
     return {
@@ -47,26 +38,25 @@ def get_db():
     return _DB
 
 
-@app.route('/user', methods=['POST'])
-def add_user():
+@app.route('/meeting', methods=['POST'])
+def create_meeting():
     json = app.current_request.json_body
-    username = json['name']
+    title = json['title']
     db = get_db()
     response = db.put_item(
         Item={
-            'user': username,
+            'title': title,
         }
     )
     return response
 
-@app.route('/user', methods=['GET'])
-def user():
-    json = app.current_request.json_body
-    username = json['name']
+
+@app.route('/meeting/{title}', methods=['GET'])
+def list_meeting(title):
     db = get_db()
     response = db.get_item(
         Key={
-            'user': username,
+            'title': title,
         }
     )
     item = response.get('Item')
