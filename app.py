@@ -1,15 +1,11 @@
-import os
 import json
+
+import boto3
 
 from chalice import Chalice
 
 app = Chalice(app_name='mannayo')
 
-
-filename = os.path.join(
-    os.path.dirname(__file__), 'chalicelib', 'voting_result.json')
-with open(filename) as f:
-    voting_result = json.load(f)
 
 @app.route('/vote/{meeting_id}', methods=['PATCH'])
 def vote(meeting_id):
@@ -37,7 +33,12 @@ def meeting():
 @app.route('/')
 def todo():
     return {
-        'todo_1': '파일로 저장하기',
-        'todo_1_1': 'elasticache 쓰려고 했는데 VPC설정이니 너무 귀찮아서 일단 S3...',
-        'todo_2': '필요한 method 정의하기',        
+        'todo_1': '필요한 method 정의하기',        
     }
+
+
+@app.route('/test-ddb')
+def test_ddb():
+    resource = boto3.resource('dynamodb')
+    table = resource.Table(os.environ['MANNAYO_TABLE_NAME'])
+    return table.name
