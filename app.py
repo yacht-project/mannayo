@@ -1,10 +1,12 @@
 import json
+import os
 
 import boto3
 
 from chalice import Chalice
 
 app = Chalice(app_name='mannayo')
+_DB = None
 
 
 @app.route('/vote/{meeting_id}', methods=['PATCH'])
@@ -33,8 +35,44 @@ def meeting():
 @app.route('/')
 def todo():
     return {
-        'todo_1': '필요한 method 정의하기',        
+        'todo_1': '필요한 method 정의하기',
+        'todo_2': 'Test가능하도록 하고 Test 추가',
     }
+
+
+def get_db():
+    global _DB
+    if _DB is None:
+        _DB = boto3.resource('dynamodb').Table(os.environ['MANNAYO_TABLE_NAME'])
+    return _DB
+
+
+@app.route('/user', methods=['POST'])
+def add_user():
+    json = app.current_request.json_body
+    username = json['name']
+    db = get_db()
+    response = db.put_item(
+        Item={
+            'user': username,
+        }
+    )
+    return response
+
+@app.route('/user', methods=['GET'])
+def user():
+    json = app.current_request.json_body
+    username = json['name']
+    db = get_db()
+    response = db.get_item(
+        Key={
+            'user': username,
+        }
+    )
+    item = response.get('Item')
+    if item:
+        return item
+    return 'No item'
 
 
 @app.route('/test-ddb')
