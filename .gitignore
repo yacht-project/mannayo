@@ -2,3 +2,29 @@
 .chalice/venv/
 __pycache__/
 .chalice/deployed/
+
+.DS_Store
+node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+front/node-modules
+front/package-lock.json
+env
