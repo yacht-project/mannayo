@@ -14,8 +14,7 @@
     "nuxt-buefy": "^0.3.13",
     "v-calendar": "^1.0.0-beta.16",
     "vue": "^2.6.10",
-    "vue-axios": "^2.1.4",
-    "vue-hotel-datepicker": "^2.6.4"
+    "vue-axios": "^2.1.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.10.0",
