@@ -3,6 +3,9 @@
   "app_name": "mannayo",
   "stages": {
     "dev": {
+      "environment_variables": {
+        "MANNAYO_TABLE_NAME": "mannayo_table"
+      },
       "api_gateway_stage": "api"
     }
   }
