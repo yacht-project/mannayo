@@ -27,4 +27,3 @@ yarn-error.log*
 
 front/node-modules
 front/package-lock.json
-env
