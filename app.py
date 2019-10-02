@@ -58,26 +58,42 @@ def create_meeting():
     return title
 
 
-@app.route('/vote/{meeting_id}', methods=['PATCH'])
-def vote(meeting_id):
-    try:
-        voting_data = voting_result[meeting_id]
-    except KeyError:
-        return {'message': 'id는 어디'}
-    print(f'test: {voting_data}')
-
+@app.route('/meeting/{meeting_id}', methods=['PATCH'])
+def attend(meeting_id):
     json = app.current_request.json_body
-    username = json['username']
-    attend = '참석' if json['attend'] else '못감'
-    return {'message': f'{username}: {attend}'}
+    username = json['who'][0]
+
+    db = get_db()
+    try:
+        response = db.get_item(
+            Key={
+                'title': meeting_id,
+            }
+        )
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+
+    try:
+        item = response['Item']
+    except KeyError:
+        return ''
+
+    if username in item['who']:
+        return 'already attend'
+    else:
+        item['who'] = item['who'] + [username]
+        db.put_item(
+            Item=item
+        )
+    return item
 
 
-@app.route('/meeting/{title}', methods=['GET'])
-def list_meeting(title):
+@app.route('/meeting/{meeting_id}', methods=['GET'])
+def list_meeting(meeting_id):
     db = get_db()
     response = db.get_item(
         Key={
-            'title': title,
+            'title': meeting_id,
         }
     )
     item = response.get('Item')
