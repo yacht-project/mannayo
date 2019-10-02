@@ -1,5 +1,8 @@
+from dataclasses import dataclass, asdict
+from dateutil.parser import parse
 import json
 import os
+import uuid
 
 import boto3
 
@@ -7,6 +10,15 @@ from chalice import Chalice
 
 app = Chalice(app_name='mannayo')
 _DB = None
+
+
+@dataclass
+class Meeting:
+    title: str  # unique key
+    when: str
+    why: str = ''
+    who: str = ''
+    where: str = ''
 
 
 @app.route('/vote/{meeting_id}', methods=['PATCH'])
@@ -41,14 +53,22 @@ def get_db():
 @app.route('/meeting', methods=['POST'])
 def create_meeting():
     json = app.current_request.json_body
-    title = json['title']
+
+    title = uuid.uuid4().hex[:8]  # Create meeting_id
+    when = parse(json['when']).strftime('%Y-%m-%d')
+    meeting = Meeting(
+        title=title,
+        when=when,
+        why=json.get('why'),
+        who=json.get('who'),
+        where=json.get('where'),
+    )
+
     db = get_db()
     response = db.put_item(
-        Item={
-            'title': title,
-        }
+        Item=asdict(meeting)
     )
-    return response
+    return title
 
 
 @app.route('/meeting/{title}', methods=['GET'])
