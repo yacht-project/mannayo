@@ -1,5 +1,6 @@
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass, field
 from dateutil.parser import parse
+from typing import List
 import json
 import os
 import uuid
@@ -17,22 +18,8 @@ class Meeting:
     title: str  # unique key
     when: str
     why: str = ''
-    who: str = ''
+    who: List[str] = field(default_factory=list)
     where: str = ''
-
-
-@app.route('/vote/{meeting_id}', methods=['PATCH'])
-def vote(meeting_id):
-    try:
-        voting_data = voting_result[meeting_id]
-    except KeyError:
-        return {'message': 'id는 어디'}
-    print(f'test: {voting_data}')
-
-    json = app.current_request.json_body
-    username = json['username']
-    attend = '참석' if json['attend'] else '못감'
-    return {'message': f'{username}: {attend}'}
 
 
 @app.route('/')
@@ -54,8 +41,8 @@ def get_db():
 def create_meeting():
     json = app.current_request.json_body
 
-    title = uuid.uuid4().hex[:8]  # Create meeting_id
     when = parse(json['when']).strftime('%Y-%m-%d')
+    title = uuid.uuid4().hex[:8]  # Create meeting_id
     meeting = Meeting(
         title=title,
         when=when,
@@ -69,6 +56,20 @@ def create_meeting():
         Item=asdict(meeting)
     )
     return title
+
+
+@app.route('/vote/{meeting_id}', methods=['PATCH'])
+def vote(meeting_id):
+    try:
+        voting_data = voting_result[meeting_id]
+    except KeyError:
+        return {'message': 'id는 어디'}
+    print(f'test: {voting_data}')
+
+    json = app.current_request.json_body
+    username = json['username']
+    attend = '참석' if json['attend'] else '못감'
+    return {'message': f'{username}: {attend}'}
 
 
 @app.route('/meeting/{title}', methods=['GET'])
