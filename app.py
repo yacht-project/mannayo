@@ -78,6 +78,7 @@ def attend(meeting_id):
     except KeyError:
         return ''
 
+    item['who'] = item['who'] or []
     if username in item['who']:
         return 'already attend'
     else:
