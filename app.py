@@ -59,9 +59,9 @@ def create_meeting():
 
 
 @app.route('/meeting/{meeting_id}', methods=['PATCH'])
-def attend(meeting_id):
+def change_users(meeting_id):
     json = app.current_request.json_body
-    username = json['who'][0]
+    users = json['who']
 
     db = get_db()
     try:
@@ -78,14 +78,10 @@ def attend(meeting_id):
     except KeyError:
         return ''
 
-    item['who'] = item['who'] or []
-    if username in item['who']:
-        return 'already attend'
-    else:
-        item['who'] = item['who'] + [username]
-        db.put_item(
-            Item=item
-        )
+    item['who'] = users
+    db.put_item(
+        Item=item
+    )
     return item
 
 
