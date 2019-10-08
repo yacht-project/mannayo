@@ -43,8 +43,8 @@ def create_meeting():
     json = app.current_request.json_body
 
     when = parse(json['when']).strftime('%Y-%m-%d')
-    #title = uuid.uuid4().hex[:8]  # Create meeting_id
-    title = get_random_bread()  # Create meeting_id
+    title = uuid.uuid4().hex[:8]  # Create meeting_id
+    #title = get_random_bread()  # Create meeting_id
     meeting = Meeting(
         title=title,
         when=when,
