@@ -8,7 +8,7 @@ import uuid
 import boto3
 
 from chalice import Chalice
-from chalicelib.ids import get_random_bread
+
 
 app = Chalice(app_name='mannayo')
 _DB = None
@@ -44,7 +44,7 @@ def create_meeting():
 
     when = parse(json['when']).strftime('%Y-%m-%d')
     title = uuid.uuid4().hex[:8]  # Create meeting_id
-    #title = get_random_bread()  # Create meeting_id
+
     meeting = Meeting(
         title=title,
         when=when,
