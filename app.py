@@ -42,7 +42,10 @@ def get_db():
 def create_meeting():
     json = app.current_request.json_body
 
-    when = parse(json['when']).strftime('%Y-%m-%d')
+    try:
+        when = parse(json['when']).strftime('%Y-%m-%d')
+    except ValueError:
+        return ''
     title = uuid.uuid4().hex[:8]  # Create meeting_id
 
     meeting = Meeting(
