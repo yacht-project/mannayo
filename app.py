@@ -1,26 +1,26 @@
+from dataclasses import asdict, dataclass, field
+from dateutil.parser import parse
+from typing import List
 import json
 import os
+import uuid
 
 import boto3
 
 from chalice import Chalice
 
+
 app = Chalice(app_name='mannayo')
 _DB = None
 
 
-@app.route('/vote/{meeting_id}', methods=['PATCH'])
-def vote(meeting_id):
-    try:
-        voting_data = voting_result[meeting_id]
-    except KeyError:
-        return {'message': 'id는 어디'}
-    print(f'test: {voting_data}')
-
-    json = app.current_request.json_body
-    username = json['username']
-    attend = '참석' if json['attend'] else '못감'
-    return {'message': f'{username}: {attend}'}
+@dataclass
+class Meeting:
+    title: str  # unique key
+    when: str
+    why: str = ''
+    who: List[str] = field(default_factory=list)
+    where: str = ''
 
 
 @app.route('/')
@@ -41,22 +41,61 @@ def get_db():
 @app.route('/meeting', methods=['POST'])
 def create_meeting():
     json = app.current_request.json_body
-    title = json['title']
+
+    try:
+        when = parse(json['when']).strftime('%Y-%m-%d')
+    except ValueError:
+        return ''
+    title = uuid.uuid4().hex[:8]  # Create meeting_id
+
+    meeting = Meeting(
+        title=title,
+        when=when,
+        why=json.get('why'),
+        who=json.get('who'),
+        where=json.get('where'),
+    )
+
     db = get_db()
     response = db.put_item(
-        Item={
-            'title': title,
-        }
+        Item=asdict(meeting)
     )
-    return response
+    return title
 
 
-@app.route('/meeting/{title}', methods=['GET'])
-def list_meeting(title):
+@app.route('/meeting/{meeting_id}', methods=['PATCH'])
+def change_users(meeting_id):
+    json = app.current_request.json_body
+    users = json['who']
+
+    db = get_db()
+    try:
+        response = db.get_item(
+            Key={
+                'title': meeting_id,
+            }
+        )
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+
+    try:
+        item = response['Item']
+    except KeyError:
+        return ''
+
+    item['who'] = users
+    db.put_item(
+        Item=item
+    )
+    return item
+
+
+@app.route('/meeting/{meeting_id}', methods=['GET'])
+def list_meeting(meeting_id):
     db = get_db()
     response = db.get_item(
         Key={
-            'title': title,
+            'title': meeting_id,
         }
     )
     item = response.get('Item')
