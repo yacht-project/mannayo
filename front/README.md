@@ -1,4 +1,4 @@
-# front
+# mannayo
 
 ## Project setup
 ```
