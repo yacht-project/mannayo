@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang='ts'>
 import Index from './components/Index.vue';
 
 export default {

@@ -24,13 +24,14 @@
   </div>
 </template>
 
-<script>
+<script lang='ts'>
+import Vue from 'vue';
 import WhenForm from './WhenForm.vue';
 import WhyForm from './WhyForm.vue';
 import WhoForm from './WhoForm.vue';
 import WhereForm from './WhereForm.vue';
 
-export default {
+export default Vue.extend({
   name: 'Index',
   components: {
     'when-form': WhenForm,
@@ -48,10 +49,10 @@ export default {
   },
   methods: {
     sendPost() {
-      this.axios.get('http://localhost:8081').then((response) => response);
+      this.axios.get('http://localhost:8081').then((response: any) => response);
     },
   },
-};
+});
 </script>
 
 <style scoped>
