@@ -6,11 +6,21 @@
     <div class="field has-addons has-addons-centered">
       <div class="control">
         <div class="buttons">
-          <a class="button is-outlined">회사</a>
-          <a class="button is-outlined">친구</a>
-          <a class="button is-outlined">가족</a>
-          <a class="button is-outlined">낯선사람</a>
-          <a class="button is-outlined">기타</a>
+          <button class="button is-outlined">
+            회사
+          </button>
+          <button class="button is-outlined">
+            친구
+          </button>
+          <button class="button is-outlined">
+            가족
+          </button>
+          <button class="button is-outlined">
+            낯선사람
+          </button>
+          <button class="button is-outlined">
+            기타
+          </button>
         </div>
         <input
           class="input"
