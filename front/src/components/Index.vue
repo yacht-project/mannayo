@@ -7,11 +7,11 @@
             <article class="tile is-child notification is-primary has-text-centered">
               <when-form />
             </article>
-            <article class="tile is-child notification is-info has-text-centered">
-              <why-form />
-            </article>
             <article class="tile is-child notification is-success has-text-centered">
               <who-form />
+            </article>
+            <article class="tile is-child notification is-info has-text-centered">
+              <why-form />
             </article>
             <article class="tile is-child notification is-warning has-text-centered">
               <where-form />
