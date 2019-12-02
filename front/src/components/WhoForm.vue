@@ -6,19 +6,19 @@
     <div class="field has-addons has-addons-centered">
       <div class="control">
         <div class="buttons">
-          <button class="button is-outlined" @click="selectWho">
+          <button class="button is-outlined" value="회사" @click="selectWho">
             회사
           </button>
-          <button class="button is-outlined" @click="selectWho">
+          <button class="button is-outlined" value="친구" @click="selectWho">
             친구
           </button>
-          <button class="button is-outlined" @click="selectWho">
+          <button class="button is-outlined" value="가족" @click="selectWho">
             가족
           </button>
-          <button class="button is-outlined" @click="selectWho">
+          <button class="button is-outlined" value="낯선사람" @click="selectWho">
             낯선사람
           </button>
-          <button class="button is-outlined" @click="selectWho">
+          <button class="button is-outlined" value="" @click="selectWho">
             기타
           </button>
         </div>
@@ -45,7 +45,7 @@ export default Vue.extend({
   }),
   methods: {
     selectWho(event: MouseEvent) {
-      this.$data.who = (event.target as HTMLButtonElement).innerText;
+      this.$data.who = (event.target as HTMLButtonElement).value;
     },
   },
 });
