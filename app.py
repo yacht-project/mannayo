@@ -7,11 +7,15 @@ import uuid
 
 import boto3
 
-from chalice import Chalice
+from chalice import Chalice, CORSConfig
 
 
 app = Chalice(app_name='mannayo')
 _DB = None
+
+cors_config = CORSConfig(
+    allow_origin='*',
+)
 
 
 @dataclass
@@ -38,7 +42,7 @@ def get_db():
     return _DB
 
 
-@app.route('/meeting', methods=['POST'])
+@app.route('/meeting', methods=['POST'], cors=cors_config)
 def create_meeting():
     json = app.current_request.json_body
 
@@ -63,7 +67,7 @@ def create_meeting():
     return title
 
 
-@app.route('/meeting/{meeting_id}', methods=['PATCH'])
+@app.route('/meeting/{meeting_id}', methods=['PATCH'], cors=cors_config)
 def change_users(meeting_id):
     json = app.current_request.json_body
     users = json['who']
@@ -90,7 +94,7 @@ def change_users(meeting_id):
     return item
 
 
-@app.route('/meeting/{meeting_id}', methods=['GET'])
+@app.route('/meeting/{meeting_id}', methods=['GET'], cors=cors_config)
 def list_meeting(meeting_id):
     db = get_db()
     response = db.get_item(
