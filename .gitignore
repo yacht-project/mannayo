@@ -6,6 +6,7 @@ __pycache__/
 .DS_Store
 node_modules
 /dist
+front/dist/
 
 # local env files
 .env.local
