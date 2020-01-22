@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass, field
 from dateutil.parser import parse
-from typing import List
+from typing import Dict, List
 import json
 import os
 import uuid
@@ -21,7 +21,7 @@ cors_config = CORSConfig(
 @dataclass
 class Meeting:
     title: str  # unique key
-    when: str
+    when: Dict[str, Dict[str, str]]  # {'from': '', 'to': ''}
     why: str = ''
     who: List[str] = field(default_factory=list)
     where: str = ''
@@ -47,14 +47,15 @@ def create_meeting():
     json = app.current_request.json_body
 
     try:
-        when = parse(json['when']).strftime('%Y-%m-%d')
+        from_ = parse(json['when']['from']).strftime('%Y-%m-%d')
+        to_ = parse(json['when']['to']).strftime('%Y-%m-%d')
     except ValueError:
         return ''
-    title = uuid.uuid4().hex[:8]  # Create meeting_id
 
+    title = uuid.uuid4().hex[:8]  # Create meeting_id
     meeting = Meeting(
         title=title,
-        when=when,
+        when={'from': from_, 'to': to_},
         why=json.get('why'),
         who=json.get('who'),
         where=json.get('where'),
